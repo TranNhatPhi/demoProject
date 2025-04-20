@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: demo
+#  profiles:
+#    active: @spring.profiles.active@
+  datasource:
+    url: jdbc:mysql://localhost:3307/demo1?useSSL=false&severTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
