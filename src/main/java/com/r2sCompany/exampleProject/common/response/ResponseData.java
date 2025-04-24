@@ -1,4 +1,4 @@
-package com.r2sCompany.exampleProject.dto.response;
+package com.r2sCompany.exampleProject.common.response;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -26,3 +26,4 @@ public class ResponseData<T> implements Serializable {
     }
 
 }
+

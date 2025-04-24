@@ -1,7 +1,7 @@
 package com.r2sCompany.exampleProject.controller;
 
-import com.r2sCompany.exampleProject.dto.response.ResponseData;
-import com.r2sCompany.exampleProject.dto.response.ResponseError;
+import com.r2sCompany.exampleProject.common.response.ResponseData;
+import com.r2sCompany.exampleProject.common.response.ResponseError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
