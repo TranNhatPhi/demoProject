@@ -12,6 +12,10 @@
 
 ---
 
+### configuration mysql
+- **url**: jdbc:mysql://localhost:3307/<Databasename>?useSSL=false&severTimezone=UTC&allowPublicKeyRetrieval=true
+- **username**=root
+- **password**=your_mysql_password
 ### 🧵 API Endpoints
 
 | Method | Endpoint           | Description             |
