@@ -2,12 +2,15 @@ package com.r2sCompany.exampleProject.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-public class UserRequestDto {
+@Getter
+public class UserRequestDto implements Serializable {
     @NotBlank(message = "firstName must be not blank")
     private String firstName;
 

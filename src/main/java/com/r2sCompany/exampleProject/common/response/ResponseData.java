@@ -2,11 +2,13 @@ package com.r2sCompany.exampleProject.common.response;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 import lombok.Getter;
 
 import java.io.Serializable;
 
 @Getter
+@Data
 public class ResponseData<T> implements Serializable {
     private final int status;
     private final String msg;
