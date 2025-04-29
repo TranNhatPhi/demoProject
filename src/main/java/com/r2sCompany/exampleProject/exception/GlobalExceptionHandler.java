@@ -8,47 +8,52 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public Map<String, Object> handleValidationErrors(MethodArgumentNotValidException ex) {
+        Map<String, String> fieldErrors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(err ->
+                fieldErrors.put(err.getField(), err.getDefaultMessage())
+        );
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Validation error");
+        response.put("errors", fieldErrors);
+        return response;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(Exception ex, WebRequest request) {
-        System.out.println("=>>>>>>>>>>>> handleValidationException");
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setTimestamp(new Date());
-        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-        errorResponse.setPath(request.getDescription(false).replace("uri=",""));
+    public Map<String, Object> handleConstraintViolation(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach(violation ->
+                errors.put(violation.getPropertyPath().toString(), violation.getMessage())
+        );
 
-        String message = ex.getMessage();
-        if (ex instanceof MethodArgumentNotValidException) {
-            int start = message.lastIndexOf("[");
-            int end = message.lastIndexOf("]");
-            message = message.substring(start + 1, end - 1);
-            errorResponse.setError("Payload invalid");
-        } else if (ex instanceof ConstraintViolationException) {
-            message = message.substring(message.indexOf(" ") + 1);
-            errorResponse.setError("PathVariable Invalid");
-        }
-
-        errorResponse.setMessage(message);
-        return errorResponse;
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Validation error");
+        response.put("errors", errors);
+        return response;
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleInternalServerErrorException(Exception ex, WebRequest request) {
-        System.out.println("=>>>>>>>>>>>> INTERNAL_SERVER_ERROR");
-        ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setTimestamp(new Date());
-        errorResponse.setStatus(INTERNAL_SERVER_ERROR.value());
-        errorResponse.setPath(request.getDescription(false).replace("uri=", ""));
-        errorResponse.setError(INTERNAL_SERVER_ERROR.getReasonPhrase());
-        errorResponse.setMessage("Failed to convert value of type");
-
-        return errorResponse;
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Failed to convert value of type");
+        response.put("error", ex.getMessage());
+        return response;
     }
 }
+

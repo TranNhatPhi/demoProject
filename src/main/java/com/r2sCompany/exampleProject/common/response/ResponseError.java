@@ -2,9 +2,13 @@ package com.r2sCompany.exampleProject.common.response;
 
 
 
-public class ResponseError extends ResponseData<Object> {
+public class ResponseError {
+    private boolean success = false;
+    private String message;
 
-    public ResponseError(int status, String msg) {
-        super(status, msg);
+    public ResponseError(String message) {
+        this.message = message;
     }
+
+    // getter + setter (hoặc dùng @Data của Lombok)
 }

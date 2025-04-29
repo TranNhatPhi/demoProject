@@ -4,6 +4,7 @@ import com.r2sCompany.exampleProject.common.response.ResponseData;
 import com.r2sCompany.exampleProject.common.response.ResponseError;
 import com.r2sCompany.exampleProject.dto.DemoDTO;
 import com.r2sCompany.exampleProject.service.DemoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class DemoController {
     @GetMapping("/hello")
     public ResponseEntity<ResponseData<String>> hello() {
         log.info("demoController hello");
-        return ResponseEntity.ok(new ResponseData<>(HttpStatus.OK.value(), "demo controller", "hello"));
+        return ResponseEntity.ok(new ResponseData<>("demo controller", "hello"));
     }
 
     @PostMapping
@@ -33,12 +34,12 @@ public class DemoController {
             log.info("demoController createItem");
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(new ResponseData<>(HttpStatus.CREATED.value(), "Demo created", created));
+                    .body(new ResponseData<>( "Demo created", created));
         } catch (Exception e) {
             log.error("Error creating demo", e);
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseError(HttpStatus.BAD_REQUEST.value(), "Failed to create demo"));
+                    .body(new ResponseError( "Failed to create demo"));
         }
     }
 
@@ -47,12 +48,12 @@ public class DemoController {
         try {
             List<DemoDTO> demoList = demoService.findAll();
             log.info("demoController getAllItems");
-            return ResponseEntity.ok(new ResponseData<>(HttpStatus.OK.value(), "All demos", demoList));
+            return ResponseEntity.ok(new ResponseData<>("All demos", demoList));
         } catch (Exception e) {
             log.error("Error fetching all demos", e);
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to retrieve demos"));
+                    .body(new ResponseError( "Failed to retrieve demos"));
         }
     }
 
@@ -61,28 +62,26 @@ public class DemoController {
         try {
             DemoDTO demo = demoService.findById(id);
             log.info("demoController getItem");
-            return ResponseEntity.ok(new ResponseData<>(HttpStatus.OK.value(), "Demo found", demo));
+            return ResponseEntity.ok(new ResponseData<>("Demo found", demo));
         } catch (Exception e) {
             log.error("Error getting demo", e);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseError(HttpStatus.NOT_FOUND.value(), "Demo not found with id " + id));
+                    .body(new ResponseError( "Demo not found with id " + id));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateItem(@PathVariable Long id, @RequestBody DemoDTO demoDTO) {
+    public ResponseEntity<?> updateItem(@PathVariable Long id, @Valid @RequestBody DemoDTO demoDTO) {
         try {
             DemoDTO updatedDemo = demoService.update(id, demoDTO);
             log.info("demoController updateItem");
-            return ResponseEntity
-                    .status(HttpStatus.ACCEPTED)
-                    .body(new ResponseData<>(HttpStatus.ACCEPTED.value(), "Demo updated", updatedDemo));
+            return ResponseEntity.ok(new ResponseData<>( "Demo updated", updatedDemo));
         } catch (Exception e) {
             log.error("Error updating demo", e);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseError(HttpStatus.NOT_FOUND.value(), "Demo not found with id " + id));
+                    .body(new ResponseError( "Demo not found with id " + id));
         }
     }
 
@@ -92,12 +91,12 @@ public class DemoController {
             demoService.delete(id);
             log.info("demoController deleteItem");
             return ResponseEntity
-                    .ok(new ResponseData<>(HttpStatus.OK.value(), "Demo deleted successfully", null));
+                    .ok(new ResponseData<>( "Demo deleted successfully", null));
         } catch (Exception e) {
             log.error("Error deleting demo", e);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseError(HttpStatus.NOT_FOUND.value(), "Demo not found with id " + id));
+                    .body(new ResponseError( "Demo not found with id " + id));
         }
     }
 }
