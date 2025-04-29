@@ -5,12 +5,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Table(name = "demo")
 @Getter
 @Setter
+@Entity
 public class DemoEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // ID tự động tăng
     private Long id;

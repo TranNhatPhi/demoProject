@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DemoRepository extends JpaRepository<DemoEntity, Long> {
-    // Bạn có thể thêm custom query nếu cần sau này
 }

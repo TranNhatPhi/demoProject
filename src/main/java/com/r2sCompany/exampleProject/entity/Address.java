@@ -2,19 +2,20 @@ package com.r2sCompany.exampleProject.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "address")
 @Entity
-@Table(name = "addresses")
-public class Address  extends AbstractEntity{
+public class Address  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
+
     @Column(name = "apartment_number")
     private String apartmentNumber;
 
@@ -36,10 +37,19 @@ public class Address  extends AbstractEntity{
     @Column(name = "country")
     private String country;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Column(name = "address_type")
     private Integer addressType;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "created_at", length = 255)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    private Date createdAt;
+
+    @Column(name = "updated_at", length = 255)
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
+    private Date updatedAt;
 }

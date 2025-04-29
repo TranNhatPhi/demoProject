@@ -1,8 +1,13 @@
 package com.r2sCompany.exampleProject.entity;
 
+import com.r2sCompany.exampleProject.common.Enum.Gender;
+import com.r2sCompany.exampleProject.common.Enum.UserStatus;
+import com.r2sCompany.exampleProject.common.Enum.UserType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 import jakarta.persistence.Id;
 
@@ -12,58 +17,55 @@ import java.util.Set;
 
 @Setter
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
 @Table(name = "users")
-public class User  extends AbstractEntity{
+@Entity
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-    @Column(name = "first_name")
+
+    @Column(name = "first_name", length = 255)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 255)
     private String lastName;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "gender", length = 255)
+    private Gender gender;
+
 
     @Column(name = "date_of_birth")
     @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
+    private Date birthday;
 
-
-    @Column(name = "gender")
-    private String gender;
-
-    @Column(name = "phone")
-    private String phone;
-
-    @Column(name = "email")
+    @Column(name = "email", length = 255)
     private String email;
 
-    @Column(name = "username")
+    @Column(name = "phone", length = 15)
+    private String phone;
+
+    @Column(name = "username", unique = true, nullable = false, length = 255)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 255)
     private String password;
 
-    @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
-    @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 255)
+    private UserStatus status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-    private Set<Address> addresses = new HashSet<>();
+    @Column(name = "created_at", length = 255)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    private Date createdAt;
 
-    public void saveAddress(Address address) {
-        if (address != null) {
-            if (addresses == null) {
-                addresses = new HashSet<>();
-            }
-            addresses.add(address);
-            address.setUser(this); // save user_id
-        }
-    }
+    @Column(name = "updated_at", length = 255)
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
+    private Date updatedAt;
 }
